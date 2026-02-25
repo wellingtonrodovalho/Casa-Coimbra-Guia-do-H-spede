@@ -537,12 +537,6 @@ function EmergencySection() {
         ))}
       </div>
 
-      <div className="bg-[#1a1a1a] p-6 rounded-[2rem] text-white space-y-4">
-        <h3 className="font-serif text-lg font-bold">Endereço</h3>
-        <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-          <p className="text-xl font-medium text-center leading-tight">{HOUSE_INFO.address}</p>
-        </div>
-      </div>
     </div>
   );
 }
