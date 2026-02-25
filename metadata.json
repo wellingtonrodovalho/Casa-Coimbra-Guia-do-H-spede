@@ -1,0 +1,7 @@
+{
+  "name": "Casa Coimbra - Guia Digital",
+  "description": "Guia de boas-vindas digital para hóspedes da Casa Coimbra em Goiânia.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
