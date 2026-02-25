@@ -44,8 +44,13 @@ export const HOUSE_INFO = {
     { name: "SAMU", phone: "192" },
     { name: "Corpo de Bombeiros", phone: "193" },
     { name: "Polícia Federal", phone: "194" },
+    { id: "pc", name: "Polícia Civil", phone: "197" },
     { name: "Guarda Municipal", phone: "153" },
-    { name: "Hospital Estadual de Urgências", phone: "62 3201-4455" }
+    { name: "Hospital de Urgências (HUGO)", phone: "62 3201-4455" },
+    { name: "DEAM (Delegacia da Mulher)", phone: "62 3201-2801" },
+    { name: "DEAI (Delegacia do Idoso)", phone: "62 3201-1501" },
+    { name: "Ministério Público Estadual", phone: "62 3243-8000" },
+    { name: "Ministério Público Federal", phone: "62 3243-5400" }
   ]
 };
 

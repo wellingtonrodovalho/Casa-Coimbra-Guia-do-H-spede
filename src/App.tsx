@@ -25,7 +25,8 @@ import {
   Menu,
   X,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  MessageCircle
 } from 'lucide-react';
 import { HOUSE_INFO, LOCAL_GUIDE } from './constants';
 
@@ -170,21 +171,63 @@ export default function App() {
             {activeTab === 'emergency' && <EmergencySection />}
           </motion.div>
         </AnimatePresence>
+
+        <footer className="mt-auto pt-8 pb-4 text-center">
+          <a 
+            href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors"
+          >
+            Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO
+          </a>
+        </footer>
       </main>
 
-      {/* Floating Home Button */}
-      {activeTab !== 'welcome' && (
-        <motion.button
+      {/* Floating Buttons */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 lg:hidden">
+        {activeTab !== 'welcome' && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setActiveTab('welcome')}
+            className="w-14 h-14 bg-[#d4a373] text-white rounded-full shadow-2xl flex items-center justify-center"
+          >
+            <Home className="w-6 h-6" />
+          </motion.button>
+        )}
+        <motion.a
+          href="https://wa.me/5562985451980"
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setActiveTab('welcome')}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#d4a373] text-white rounded-full shadow-2xl flex items-center justify-center lg:hidden"
+          className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center"
         >
-          <Home className="w-6 h-6" />
-        </motion.button>
-      )}
+          <MessageCircle className="w-7 h-7" />
+        </motion.a>
+      </div>
+
+      {/* Desktop WhatsApp Button */}
+      <div className="hidden lg:block fixed bottom-8 right-8 z-50">
+        <motion.a
+          href="https://wa.me/5562985451980"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-2xl border border-black/5 group"
+        >
+          <div className="w-10 h-10 bg-[#25D366] text-white rounded-full flex items-center justify-center">
+            <MessageCircle className="w-6 h-6" />
+          </div>
+          <span className="font-bold text-sm text-[#1a1a1a]">Fale com o Anfitrião</span>
+        </motion.a>
+      </div>
     </div>
   );
 }
@@ -476,18 +519,18 @@ function EmergencySection() {
         <p className="text-[#1a1a1a]/60 text-sm">Contatos úteis.</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        {HOUSE_INFO.emergencies.slice(0, 4).map((contact, idx) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto max-h-[50vh] pr-1">
+        {HOUSE_INFO.emergencies.map((contact, idx) => (
           <a
             key={idx}
-            href={`tel:${contact.phone.replace(/\s/g, '')}`}
-            className="bg-white p-4 rounded-2xl shadow-sm border border-black/5 flex flex-col items-center text-center gap-2 group hover:border-[#d4a373] transition-colors"
+            href={`tel:${contact.phone.replace(/\D/g, '')}`}
+            className="bg-white p-4 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4 group hover:border-[#d4a373] transition-colors"
           >
-            <div className="w-8 h-8 bg-[#f5f2ed] rounded-lg flex items-center justify-center group-hover:bg-[#d4a373] group-hover:text-white transition-all">
+            <div className="w-10 h-10 bg-[#f5f2ed] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#d4a373] group-hover:text-white transition-all">
               <Phone className="w-4 h-4" />
             </div>
-            <div className="space-y-0.5">
-              <p className="text-[8px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold">{contact.name}</p>
+            <div className="text-left">
+              <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold leading-tight">{contact.name}</p>
               <p className="text-sm font-serif font-bold group-hover:text-[#d4a373] transition-colors">{contact.phone}</p>
             </div>
           </a>
