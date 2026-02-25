@@ -30,7 +30,10 @@ import {
   MessageSquare,
   Send,
   Camera,
-  Check
+  Check,
+  Mail,
+  Globe,
+  User
 } from 'lucide-react';
 import { HOUSE_INFO, LOCAL_GUIDE } from './constants';
 
@@ -178,15 +181,59 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
 
-        <footer className="mt-auto pt-8 pb-4 text-center">
-          <a 
-            href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors"
-          >
-            Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO
-          </a>
+        <footer className="mt-auto pt-12 pb-8 border-t border-black/5">
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-left">
+            <div className="space-y-4">
+              <div className="flex flex-col gap-1">
+                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Endereço da Propriedade</p>
+                <a 
+                  href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] transition-colors flex items-center justify-center md:justify-start gap-2"
+                >
+                  <MapPin className="w-3 h-3" />
+                  Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO
+                </a>
+              </div>
+              
+              <div className="flex flex-col gap-1">
+                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Corretor Responsável</p>
+                <div className="flex items-center justify-center md:justify-start gap-2 text-xs text-[#1a1a1a]/80 font-bold">
+                  <User className="w-3 h-3 text-[#d4a373]" />
+                  WELLINGTON RODOVALHO FONSECA
+                </div>
+                <div className="text-[10px] text-[#1a1a1a]/40 space-x-3">
+                  <span>CAEPF: 269.462.701/001-49</span>
+                  <span>CRECI: GO 42695</span>
+                  <span>CNAI: 54826</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex flex-col gap-1">
+                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Contato & Links</p>
+                <div className="flex flex-col gap-2 items-center md:items-start">
+                  <a href="https://www.alugagoias.com.br" target="_blank" rel="noopener noreferrer" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
+                    <Globe className="w-3 h-3" />
+                    www.alugagoias.com.br
+                  </a>
+                  <a href="https://wa.me/5562985451980" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
+                    <MessageCircle className="w-3 h-3" />
+                    (62) 98545-1980
+                  </a>
+                  <a href="mailto:contato@alugagoias.com.br" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
+                    <Mail className="w-3 h-3" />
+                    contato@alugagoias.com.br
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-4 border-t border-black/5 text-center">
+            <p className="text-[9px] text-[#1a1a1a]/20 uppercase tracking-widest">© {new Date().getFullYear()} Casa Coimbra - Todos os direitos reservados</p>
+          </div>
         </footer>
       </main>
 
