@@ -51,7 +51,6 @@ export default function App() {
 
   const tabs = [
     { id: 'welcome', label: 'Início', icon: Home },
-    { id: 'wifi', label: 'Wi-Fi', icon: Wifi },
     { id: 'checkin', label: 'Check-in', icon: Key },
     { id: 'house', label: 'A Casa', icon: Info },
     { id: 'rules', label: 'Regras', icon: ShieldAlert },
@@ -163,7 +162,6 @@ export default function App() {
             className="flex-1 flex flex-col"
           >
             {activeTab === 'welcome' && <WelcomeSection onNavigate={setActiveTab} tabs={tabs} />}
-            {activeTab === 'wifi' && <WifiSection />}
             {activeTab === 'checkin' && <CheckInSection />}
             {activeTab === 'house' && <HouseSection />}
             {activeTab === 'rules' && <RulesSection />}
@@ -239,6 +237,15 @@ function WelcomeSection({ onNavigate, tabs }: { onNavigate: (id: string) => void
         <Logo className="w-24 h-24 lg:w-32 lg:h-32 mx-auto mb-4" />
         <h2 className="font-serif text-4xl lg:text-6xl font-bold text-[#1a1a1a]">Casa Coimbra</h2>
         <p className="text-[#d4a373] font-bold uppercase tracking-[0.2em] text-xs lg:text-sm">Guia Digital de Boas-Vindas</p>
+        <a 
+          href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 text-[10px] lg:text-xs text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors mt-2"
+        >
+          <MapPin className="w-3 h-3" />
+          <span>Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO</span>
+        </a>
       </div>
 
       {/* Compact App-like Button Grid */}
@@ -261,47 +268,6 @@ function WelcomeSection({ onNavigate, tabs }: { onNavigate: (id: string) => void
 
       <div className="pt-4 text-center">
         <p className="text-[#1a1a1a]/40 text-[10px] uppercase tracking-widest font-bold">Toque em uma opção para começar</p>
-      </div>
-    </div>
-  );
-}
-
-function WifiSection() {
-  return (
-    <div className="max-w-xl mx-auto space-y-6 flex flex-col justify-center flex-1">
-      <div className="text-center space-y-2">
-        <div className="w-16 h-16 bg-[#d4a373] rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-[#d4a373]/20">
-          <Wifi className="w-8 h-8 text-white" />
-        </div>
-        <h2 className="font-serif text-3xl font-bold">Conecte-se</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Acesse nossa rede Wi-Fi</p>
-      </div>
-
-      <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-black/5 space-y-6">
-        <div className="space-y-4">
-          <div className="p-4 bg-[#f5f2ed] rounded-2xl border border-black/5">
-            <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold mb-1">Rede</p>
-            <p className="text-xl font-mono font-bold text-[#d4a373]">{HOUSE_INFO.wifi.network}</p>
-          </div>
-          <div className="p-4 bg-[#f5f2ed] rounded-2xl border border-black/5 relative group">
-            <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold mb-1">Senha</p>
-            <p className="text-xl font-mono font-bold text-[#d4a373]">{HOUSE_INFO.wifi.password}</p>
-            <button 
-              onClick={() => navigator.clipboard.writeText(HOUSE_INFO.wifi.password)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white rounded-lg text-[10px] font-bold uppercase shadow-sm hover:bg-[#d4a373] hover:text-white transition-all"
-            >
-              Copiar
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-32 h-32 bg-white p-3 rounded-2xl border border-[#d4a373]/20 flex items-center justify-center">
-            <div className="w-full h-full bg-black/5 rounded-lg flex items-center justify-center text-[8px] text-center p-2 text-[#1a1a1a]/40 font-bold uppercase tracking-tighter">
-              QR Code no guia físico
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -365,46 +331,76 @@ function CheckInSection() {
 function HouseSection() {
   const rooms = [
     {
+      title: "Wi-Fi",
+      desc: `Rede: ${HOUSE_INFO.wifi.network} | Senha: ${HOUSE_INFO.wifi.password}`,
+      icon: Wifi,
+      isWifi: true
+    },
+    {
       title: "Salas",
-      desc: "Estar, TV, alpendre e garagem (2 carros).",
+      desc: "Para sua comodidade, nossa casa tem duas salas: uma de estar e uma de TV, um alpendre e uma garagem para dois veículos pequenos.",
+      icon: Home,
+    },
+    {
+      title: "Sala de TV",
+      desc: "Tv Lcd 55”, Rack de madeira, Aparador com vaso, Duas poltronas, Um sofá de três lugares e Ventilador de teto.",
       icon: Tv,
     },
     {
-      title: "Quartos",
-      desc: "Suíte (Casal, AC), Quarto 1 (Casal), Quarto 2 (2 Solteiro).",
-      icon: Bed,
-    },
-    {
       title: "Cozinha",
-      desc: "Fogão 6 bocas, mesa 6 lugares, air fryer.",
+      desc: "Fogão de seis bocas com forno, eletrodomésticos, mesa para refeições de seis lugares, rica em armários, air fryer e refrigerador duplex.",
       icon: Utensils,
     },
     {
+      title: "Quartos",
+      desc: "3 quartos com ventilador de teto: Suíte (Cama casal, AC, TV 32\"), Quarto 1 (Cama casal) e Quarto 2 (Duas camas solteiro).",
+      icon: Bed,
+    },
+    {
       title: "Área Externa",
-      desc: "Jardim, rede, churrasqueira e ducha.",
+      desc: "Jardim ornamental e frutífero, área com mesa e cadeiras, rede, churrasqueira portátil a carvão e ducha.",
       icon: TreePine,
     }
   ];
 
   return (
     <div className="space-y-6 flex flex-col flex-1">
-      <div className="space-y-1">
-        <h2 className="font-serif text-3xl font-bold">A Casa</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Estrutura completa para sua estadia.</p>
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="font-serif text-3xl font-bold">A Casa</h2>
+          <p className="text-[#1a1a1a]/60 text-sm">Estrutura completa para sua estadia.</p>
+        </div>
+        <div className="bg-[#d4a373] px-4 py-2 rounded-2xl text-white flex items-center gap-2 shadow-sm">
+          <Zap className="w-4 h-4" />
+          <span className="font-bold text-xs uppercase tracking-wider">Tensão 220V</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto max-h-[65vh] pr-1">
         {rooms.map((room, idx) => (
           <div 
             key={idx}
-            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col gap-4"
+            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col gap-3"
           >
-            <div className="w-10 h-10 bg-[#f5f2ed] rounded-xl flex items-center justify-center">
-              <room.icon className="text-[#d4a373] w-5 h-5" />
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 bg-[#f5f2ed] rounded-xl flex items-center justify-center">
+                <room.icon className="text-[#d4a373] w-5 h-5" />
+              </div>
+              {room.isWifi && (
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(HOUSE_INFO.wifi.password);
+                    alert('Senha copiada!');
+                  }}
+                  className="px-3 py-1 bg-[#f5f2ed] rounded-lg text-[9px] font-bold uppercase text-[#d4a373] hover:bg-[#d4a373] hover:text-white transition-all shadow-sm"
+                >
+                  Copiar Senha
+                </button>
+              )}
             </div>
-            <div className="flex-1 flex flex-col justify-center">
+            <div>
               <h3 className="font-serif text-sm font-bold mb-1">{room.title}</h3>
-              <p className="text-[#1a1a1a]/60 text-[10px] leading-tight">{room.desc}</p>
+              <p className="text-[#1a1a1a]/60 text-[10px] leading-relaxed">{room.desc}</p>
             </div>
           </div>
         ))}
