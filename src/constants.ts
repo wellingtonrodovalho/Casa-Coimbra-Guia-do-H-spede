@@ -11,11 +11,11 @@ export const HOUSE_INFO = {
   checkIn: {
     gate: "No teclado ao lado do portão, digite os 6 primeiros dígitos do seu número de telefone cadastrado, seguidos da tecla #.",
     keys: "Cofre das Chaves localizado na porta da sala. A senha corresponde aos 4 primeiros dígitos do seu número de telefone.",
-    time: "A partir das 14h",
+    time: "A partir das 14 horas",
     voltage: "220V"
   },
   checkOut: {
-    time: "Até às 11h",
+    time: "Até às 11 horas",
     rules: [
       "Não acumule lixo, recolha lixo e coloque na lixeira na rua",
       "Não deixe acumular vasilhas sujas, lave-as sempre que terminar o uso",

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Wifi, 
@@ -26,7 +26,11 @@ import {
   X,
   ChevronRight,
   ExternalLink,
-  MessageCircle
+  MessageCircle,
+  MessageSquare,
+  Send,
+  Camera,
+  Check
 } from 'lucide-react';
 import { HOUSE_INFO, LOCAL_GUIDE } from './constants';
 
@@ -52,10 +56,12 @@ export default function App() {
   const tabs = [
     { id: 'welcome', label: 'Início', icon: Home },
     { id: 'checkin', label: 'Check-in', icon: Key },
+    { id: 'checkout', label: 'Checkout', icon: LogOut },
     { id: 'house', label: 'A Casa', icon: Info },
     { id: 'rules', label: 'Regras', icon: ShieldAlert },
     { id: 'local', label: 'Guia Local', icon: MapPin },
     { id: 'emergency', label: 'Emergência', icon: Phone },
+    { id: 'feedback', label: 'Feedback', icon: MessageSquare },
   ];
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -163,10 +169,12 @@ export default function App() {
           >
             {activeTab === 'welcome' && <WelcomeSection onNavigate={setActiveTab} tabs={tabs} />}
             {activeTab === 'checkin' && <CheckInSection />}
+            {activeTab === 'checkout' && <CheckOutSection />}
             {activeTab === 'house' && <HouseSection />}
             {activeTab === 'rules' && <RulesSection />}
             {activeTab === 'local' && <LocalGuideSection />}
             {activeTab === 'emergency' && <EmergencySection />}
+            {activeTab === 'feedback' && <FeedbackSection />}
           </motion.div>
         </AnimatePresence>
 
@@ -278,16 +286,21 @@ function CheckInSection() {
     <div className="space-y-8 flex flex-col flex-1">
       <div className="space-y-2">
         <h2 className="font-serif text-3xl font-bold">Check-in & Acesso</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua entrada e saída.</p>
+        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua entrada.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-black/5 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#d4a373]/10 rounded-xl flex items-center justify-center">
-              <Key className="text-[#d4a373] w-5 h-5" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#d4a373]/10 rounded-xl flex items-center justify-center">
+                <Key className="text-[#d4a373] w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-xl font-bold">Entrada</h3>
             </div>
-            <h3 className="font-serif text-xl font-bold">Entrada</h3>
+            <div className="bg-[#d4a373] px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider">
+              {HOUSE_INFO.checkIn.time}
+            </div>
           </div>
           
           <div className="space-y-4">
@@ -306,22 +319,62 @@ function CheckInSection() {
           </div>
         </div>
 
+        <div className="bg-[#1a1a1a] p-8 rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center items-center text-center space-y-4">
+          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center">
+            <Clock className="w-8 h-8 text-[#d4a373]" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-serif text-2xl font-bold">Horário</h3>
+            <p className="text-[#d4a373] font-bold text-lg">{HOUSE_INFO.checkIn.time}</p>
+          </div>
+          <p className="text-white/40 text-xs max-w-[200px]">Seja bem-vindo à Casa Coimbra! Aproveite sua estadia.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CheckOutSection() {
+  return (
+    <div className="space-y-8 flex flex-col flex-1">
+      <div className="space-y-2">
+        <h2 className="font-serif text-3xl font-bold">Checkout</h2>
+        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua saída.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
         <div className="bg-[#1a1a1a] p-8 rounded-[2.5rem] shadow-xl text-white space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-              <LogOut className="text-white w-5 h-5" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                <LogOut className="text-white w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-xl font-bold">Saída</h3>
             </div>
-            <h3 className="font-serif text-xl font-bold">Saída</h3>
+            <div className="bg-[#d4a373] px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider">
+              {HOUSE_INFO.checkOut.time}
+            </div>
           </div>
 
           <div className="space-y-3">
-            {HOUSE_INFO.checkOut.rules.slice(0, 5).map((rule, idx) => (
+            {HOUSE_INFO.checkOut.rules.map((rule, idx) => (
               <div key={idx} className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-[#d4a373] shrink-0 mt-0.5" />
                 <span className="text-[11px] text-white/80 leading-snug">{rule}</span>
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-black/5 flex flex-col justify-center items-center text-center space-y-4">
+          <div className="w-16 h-16 bg-[#f5f2ed] rounded-2xl flex items-center justify-center">
+            <Clock className="w-8 h-8 text-[#d4a373]" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-serif text-2xl font-bold">Horário Limite</h3>
+            <p className="text-[#d4a373] font-bold text-lg">{HOUSE_INFO.checkOut.time}</p>
+          </div>
+          <p className="text-[#1a1a1a]/40 text-xs max-w-[200px]">Agradecemos a preferência e esperamos vê-lo novamente!</p>
         </div>
       </div>
     </div>
@@ -532,7 +585,161 @@ function EmergencySection() {
           </a>
         ))}
       </div>
-
     </div>
   );
 }
+
+function FeedbackSection() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [formData, setFormData] = useState({
+    type: 'Feedback',
+    name: '',
+    message: '',
+  });
+  const [image, setImage] = useState<File | null>(null);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+
+    const data = new FormData();
+    data.append('type', formData.type);
+    data.append('name', formData.name);
+    data.append('message', formData.message);
+    data.append('date', new Date().toLocaleString('pt-BR'));
+    if (image) {
+      data.append('image', image);
+    }
+
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ type: 'Feedback', name: '', message: '' });
+        setImage(null);
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <div className="space-y-6 flex flex-col flex-1 max-w-2xl mx-auto w-full">
+      <div className="space-y-1">
+        <h2 className="font-serif text-3xl font-bold">Feedback & Contato</h2>
+        <p className="text-[#1a1a1a]/60 text-sm">Elogios, dúvidas ou sugestões? Adoraríamos ouvir você.</p>
+      </div>
+
+      {status === 'success' ? (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-black/5 text-center space-y-4"
+        >
+          <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto text-white">
+            <Check className="w-8 h-8" />
+          </div>
+          <h3 className="font-serif text-2xl font-bold">Obrigado!</h3>
+          <p className="text-[#1a1a1a]/60">Sua mensagem foi enviada com sucesso e será analisada pelo anfitrião.</p>
+          <button 
+            onClick={() => setStatus('idle')}
+            className="px-6 py-2 bg-[#d4a373] text-white rounded-full font-bold text-sm"
+          >
+            Enviar outra mensagem
+          </button>
+        </motion.div>
+      ) : (
+        <form onSubmit={handleSubmit} className="bg-white p-6 lg:p-8 rounded-[2.5rem] shadow-sm border border-black/5 space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold ml-1">Tipo de Mensagem</label>
+              <select 
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all"
+                required
+              >
+                <option>Elogio</option>
+                <option>Dúvida</option>
+                <option>Problema</option>
+                <option>Sugestão</option>
+                <option>Feedback</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold ml-1">Seu Nome (Opcional)</label>
+              <input 
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Como podemos te chamar?"
+                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold ml-1">Mensagem</label>
+              <textarea 
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                placeholder="Escreva aqui..."
+                rows={4}
+                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all resize-none"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold ml-1">Anexar Imagem (Opcional)</label>
+              <div className="relative">
+                <input 
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files?.[0] || null)}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label 
+                  htmlFor="image-upload"
+                  className="flex items-center gap-3 w-full bg-[#f5f2ed] border-dashed border-2 border-black/5 rounded-2xl px-4 py-3 text-sm cursor-pointer hover:bg-black/5 transition-all"
+                >
+                  <Camera className="w-5 h-5 text-[#d4a373]" />
+                  <span className="text-[#1a1a1a]/60 truncate">
+                    {image ? image.name : "Toque para selecionar uma foto"}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {status === 'error' && (
+            <p className="text-red-500 text-xs font-bold text-center">Ocorreu um erro ao enviar. Tente novamente.</p>
+          )}
+
+          <button 
+            type="submit"
+            disabled={status === 'loading'}
+            className="w-full bg-[#d4a373] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#d4a373]/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+          >
+            {status === 'loading' ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <Send className="w-5 h-5" />
+                Enviar Mensagem
+              </>
+            )}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
