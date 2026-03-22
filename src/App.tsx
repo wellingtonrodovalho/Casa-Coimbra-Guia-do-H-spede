@@ -219,9 +219,9 @@ export default function App() {
                     <Globe className="w-3 h-3" />
                     www.alugagoias.com.br
                   </a>
-                  <a href="https://wa.me/5562985451980" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
+                  <a href="https://wa.me/5562991514568" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
                     <MessageCircle className="w-3 h-3" />
-                    (62) 98545-1980
+                    (62) 99151-4568
                   </a>
                   <a href="mailto:contato@alugagoias.com.br" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
                     <Mail className="w-3 h-3" />
@@ -252,7 +252,7 @@ export default function App() {
           </motion.button>
         )}
         <motion.a
-          href="https://wa.me/5562985451980"
+          href="https://wa.me/5562991514568"
           target="_blank"
           rel="noopener noreferrer"
           initial={{ scale: 0, opacity: 0 }}
@@ -268,7 +268,7 @@ export default function App() {
       {/* Desktop WhatsApp Button */}
       <div className="hidden lg:block fixed bottom-8 right-8 z-50">
         <motion.a
-          href="https://wa.me/5562985451980"
+          href="https://wa.me/5562991514568"
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.1 }}
