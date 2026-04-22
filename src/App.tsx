@@ -33,7 +33,8 @@ import {
   Check,
   Mail,
   Globe,
-  User
+  User,
+  Search
 } from 'lucide-react';
 import { HOUSE_INFO, LOCAL_GUIDE } from './constants';
 
@@ -55,6 +56,8 @@ function Logo({ className = "w-8 h-8" }: { className?: string }) {
 export default function App() {
   const [activeTab, setActiveTab] = useState('welcome');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const tabs = [
     { id: 'welcome', label: 'Início', icon: Home },
@@ -81,12 +84,20 @@ export default function App() {
           <Logo className="w-8 h-8" />
           <span className="font-serif font-bold text-xl tracking-tight">Casa Coimbra</span>
         </div>
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 hover:bg-black/5 rounded-full transition-colors"
-        >
-          {isMenuOpen ? <X /> : <Menu />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#1a1a1a]/60"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 hover:bg-black/5 rounded-full transition-colors"
+          >
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </header>
 
       {/* Desktop Sidebar */}
@@ -97,7 +108,18 @@ export default function App() {
           <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Guia Digital</p>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <div className="mb-6 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1a1a1a]/40" />
+          <input 
+            type="text"
+            placeholder="Pesquisar..."
+            readOnly
+            onClick={() => setIsSearchOpen(true)}
+            className="w-full bg-[#f5f2ed] border-none rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all cursor-pointer placeholder:text-[#1a1a1a]/30"
+          />
+        </div>
+
+        <nav className="flex-1 space-y-1 overflow-y-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -170,7 +192,13 @@ export default function App() {
             transition={{ duration: 0.2 }}
             className="flex-1 flex flex-col"
           >
-            {activeTab === 'welcome' && <WelcomeSection onNavigate={setActiveTab} tabs={tabs} />}
+            {activeTab === 'welcome' && (
+              <WelcomeSection 
+                onNavigate={setActiveTab} 
+                tabs={tabs} 
+                onSearchClick={() => setIsSearchOpen(true)}
+              />
+            )}
             {activeTab === 'checkin' && <CheckInSection />}
             {activeTab === 'checkout' && <CheckOutSection />}
             {activeTab === 'house' && <HouseSection />}
@@ -281,11 +309,21 @@ export default function App() {
           <span className="font-bold text-sm text-[#1a1a1a]">Fale com o Anfitrião</span>
         </motion.a>
       </div>
+
+      <SearchOverlay 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+        onNavigate={(tabId) => {
+          setActiveTab(tabId);
+          setIsSearchOpen(false);
+          setIsMenuOpen(false);
+        }}
+      />
     </div>
   );
 }
 
-function WelcomeSection({ onNavigate, tabs }: { onNavigate: (id: string) => void, tabs: any[] }) {
+function WelcomeSection({ onNavigate, tabs, onSearchClick }: { onNavigate: (id: string) => void, tabs: any[], onSearchClick: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 space-y-8 py-4 lg:py-0">
       <div className="text-center space-y-2">
@@ -302,6 +340,27 @@ function WelcomeSection({ onNavigate, tabs }: { onNavigate: (id: string) => void
           <span>Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO</span>
         </a>
       </div>
+
+      {/* Prominent Body Search Box */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="w-full max-w-xl px-4"
+      >
+        <div 
+          onClick={onSearchClick}
+          className="bg-white border border-black/5 p-4 lg:p-5 rounded-[2rem] shadow-xl shadow-[#d4a373]/5 flex items-center gap-4 cursor-pointer group hover:border-[#d4a373]/30 transition-all"
+        >
+          <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#f5f2ed] rounded-2xl flex items-center justify-center text-[#d4a373] group-hover:bg-[#d4a373] group-hover:text-white transition-colors">
+            <Search className="w-5 h-5 lg:w-6 lg:h-6" />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-sm lg:text-base font-bold text-[#1a1a1a] mb-0.5">O que você procura?</p>
+            <p className="text-[10px] lg:text-xs text-[#1a1a1a]/40 font-medium">Ex: wi-fi, regras, check-in, farmácia...</p>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Compact App-like Button Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 lg:gap-4 w-full max-w-2xl">
@@ -779,14 +838,155 @@ function FeedbackSection() {
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
-                <Send className="w-5 h-5" />
-                Enviar Mensagem
+                <div className="flex items-center gap-2">
+                  <Send className="w-5 h-5" />
+                  <span>Enviar Mensagem</span>
+                </div>
               </>
             )}
           </button>
         </form>
       )}
     </div>
+  );
+}
+
+interface SearchItem {
+  title: string;
+  content: string;
+  tabId: string;
+  catId?: string;
+}
+
+function SearchOverlay({ isOpen, onClose, onNavigate }: { isOpen: boolean, onClose: () => void, onNavigate: (id: string, cat?: string) => void }) {
+  const [query, setQuery] = useState('');
+  
+  const searchableContent: SearchItem[] = [
+    { title: 'Check-in Acesso Portão', content: HOUSE_INFO.checkIn.gate, tabId: 'checkin' },
+    { title: 'Cofre de Chaves', content: HOUSE_INFO.checkIn.keys, tabId: 'checkin' },
+    { title: 'Horário Check-in', content: HOUSE_INFO.checkIn.time, tabId: 'checkin' },
+    { title: 'Horário Checkout', content: HOUSE_INFO.checkOut.time, tabId: 'checkout' },
+    ...HOUSE_INFO.checkOut.rules.map(r => ({ title: 'Regra de Checkout', content: r, tabId: 'checkout' })),
+    ...HOUSE_INFO.rules.map(r => ({ title: 'Regra da Casa', content: r, tabId: 'rules' })),
+    ...HOUSE_INFO.emergencies.map(e => ({ title: `Emergência: ${e.name}`, content: e.phone, tabId: 'emergency' })),
+    { title: 'Wi-Fi Senha', content: `${HOUSE_INFO.wifi.network} ${HOUSE_INFO.wifi.password}`, tabId: 'house' },
+    { title: 'Salas', content: "Estar, TV, alpendre, garagem", tabId: 'house' },
+    { title: 'Sala de TV', content: "TV 55, Poltronas, Ventilador", tabId: 'house' },
+    { title: 'Cozinha', content: "Fogão, Air Fryer, Geladeira", tabId: 'house' },
+    { title: 'Quartos', content: "3 quartos, Ar Condicionado, Ventiladores", tabId: 'house' },
+    { title: 'Área Externa', content: "Jardim, Churrasqueira, Ducha", tabId: 'house' },
+    { title: 'Tensão Elétrica', content: "220V", tabId: 'house' },
+  ];
+
+  // Add Local Guide items
+  Object.entries(LOCAL_GUIDE).forEach(([catId, places]) => {
+    places.forEach(place => {
+      searchableContent.push({ 
+        title: place.name, 
+        content: `${place.description} ${place.address || ''}`, 
+        tabId: 'local',
+        catId: catId
+      });
+    });
+  });
+
+  const filteredResults = query.trim() === '' 
+    ? [] 
+    : searchableContent.filter(item => 
+        item.title.toLowerCase().includes(query.toLowerCase()) || 
+        item.content.toLowerCase().includes(query.toLowerCase())
+      );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+      setQuery('');
+    }
+  }, [isOpen]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm p-4 lg:p-20 flex flex-col items-center"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            className="bg-[#f5f2ed] w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[70vh] lg:h-auto max-h-[80vh]"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-black/5 bg-white flex items-center gap-3">
+              <Search className="w-5 h-5 text-[#d4a373]" />
+              <input 
+                autoFocus
+                type="text"
+                placeholder="O que você precisa saber?"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                className="flex-1 bg-transparent border-none focus:ring-0 text-lg lg:text-xl font-medium placeholder:text-[#1a1a1a]/20"
+              />
+              <button 
+                onClick={onClose}
+                className="p-2 hover:bg-black/5 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {query.trim() === '' ? (
+                <div className="flex flex-col items-center justify-center h-full text-center space-y-3 p-10">
+                  <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center text-[#d4a373]">
+                    <Search className="w-8 h-8 opacity-20" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#1a1a1a]/40">Pesquisa Inteligente</h3>
+                    <p className="text-xs text-[#1a1a1a]/30">Ex: "wifi", "telefone", "churrasqueira", "hospital"</p>
+                  </div>
+                </div>
+              ) : filteredResults.length > 0 ? (
+                filteredResults.map((result, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => onNavigate(result.tabId)}
+                    className="w-full bg-white p-4 rounded-2xl border border-black/5 hover:border-[#d4a373] hover:shadow-md transition-all text-left flex items-start justify-between group"
+                  >
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#d4a373] bg-[#d4a373]/5 px-2 py-0.5 rounded-full">
+                          {result.tabId}
+                        </span>
+                        <h4 className="font-bold text-sm lg:text-base text-[#1a1a1a]">{result.title}</h4>
+                      </div>
+                      <p className="text-xs text-[#1a1a1a]/60 line-clamp-2 leading-relaxed">{result.content}</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-[#d4a373] opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
+                  </button>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
+                  <Logo className="w-16 h-16 grayscale mb-4" />
+                  <p className="font-bold">Nenhum resultado encontrado para "{query}"</p>
+                  <p className="text-xs">Tente termos mais simples.</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 bg-white/50 border-t border-black/5 text-center">
+              <p className="text-[10px] text-[#1a1a1a]/30 uppercase tracking-widest font-bold">Pesquisando no Guia Casa Coimbra</p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
