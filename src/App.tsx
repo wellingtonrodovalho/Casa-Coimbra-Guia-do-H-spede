@@ -671,31 +671,33 @@ function HouseSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto max-h-[65vh] pr-1">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-3">
         {rooms.map((room, idx) => (
           <div 
             key={idx}
-            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col gap-3 hover:border-[#009c3b] transition-all"
+            className="bg-white p-3 rounded-2xl shadow-sm border border-black/5 flex flex-col justify-between hover:border-[#009c3b] transition-all duration-200 gap-2 hover:shadow-md"
           >
-            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 bg-[#f1fcf4] rounded-xl flex items-center justify-center">
-                <room.icon className="text-[#009c3b] w-5 h-5 animate-wave-flag" />
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#f1fcf4] flex items-center justify-center shrink-0 mt-0.5">
+                <room.icon className="text-[#009c3b] w-4 h-4" />
               </div>
-              {room.isWifi && (
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText(HOUSE_INFO.wifi.password);
-                    alert('Senha copiada!');
-                  }}
-                  className="px-3 py-1 bg-yellow-400 text-[#002776] rounded-lg text-[9px] font-black uppercase hover:bg-[#009c3b] hover:text-white transition-all shadow-sm"
-                >
-                  Copiar Senha
-                </button>
-              )}
-            </div>
-            <div>
-              <h3 className="font-serif text-sm font-bold mb-1 text-slate-900">{room.title}</h3>
-              <p className="text-[#1a1a1a]/70 text-[10px] leading-relaxed font-semibold">{room.desc}</p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mt-0.5 gap-2">
+                  <h3 className="font-serif text-[13px] font-black text-slate-900 truncate">{room.title}</h3>
+                  {room.isWifi && (
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(HOUSE_INFO.wifi.password);
+                        alert('Senha copiada!');
+                      }}
+                      className="px-2 py-0.5 bg-yellow-400 text-[#002776] rounded text-[8px] font-black uppercase hover:bg-[#009c3b] hover:text-white transition-all shadow-sm shrink-0"
+                    >
+                      Senha
+                    </button>
+                  )}
+                </div>
+                <p className="text-[#1a1a1a]/70 text-[10px] leading-relaxed font-bold mt-1">{room.desc}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -705,6 +707,23 @@ function HouseSection() {
 }
 
 function RulesSection() {
+  const getRuleEmoji = (rule: string): string => {
+    const r = rule.toLowerCase();
+    if (r.includes('capacidade') || r.includes('hóspedes') || r.includes('pessoas')) return "👥";
+    if (r.includes('visita')) return "🚫";
+    if (r.includes('evento') || r.includes('festa')) return "🎉";
+    if (r.includes('vizinho') || r.includes('som') || r.includes('silêncio') || r.includes('barulho')) return "🤫";
+    if (r.includes('pet') || r.includes('animal') || r.includes('cachorror') || r.includes('gato')) return "🐾";
+    if (r.includes('criança')) return "👶";
+    if (r.includes('fumar') || r.includes('cigarro')) return "🚭";
+    if (r.includes('vasilha') || r.includes('louça') || r.includes('suja') || r.includes('multa')) return "🍽️";
+    if (r.includes('lixo')) return "🗑️";
+    if (r.includes('máquina') || r.includes('lavar')) return "🧺";
+    if (r.includes('aparelho') || r.includes('desligar') || r.includes('ar condicionado') || r.includes('luz')) return "💡";
+    if (r.includes('churrasqueira') || r.includes('churrasco') || r.includes('quintal')) return "🍖";
+    return "📋";
+  };
+
   return (
     <div className="space-y-6 flex flex-col flex-1">
       <div className="bg-[#009c3b] p-6 rounded-[2rem] text-[#ffdf00] flex items-center gap-4 border-2 border-yellow-400">
@@ -715,14 +734,26 @@ function RulesSection() {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-black/5 flex-1 overflow-y-auto max-h-[60vh]">
-        <div className="grid grid-cols-1 gap-3">
-          {HOUSE_INFO.rules.map((rule, idx) => (
-            <div key={idx} className="flex items-start gap-3 p-2 hover:bg-[#f1fcf4] rounded-xl transition-colors">
-              <div className="w-1.5 h-1.5 bg-[#009c3b] rounded-full mt-1.5 shrink-0"></div>
-              <span className="text-[#1a1a1a]/80 font-bold text-[11px] leading-snug">{rule}</span>
-            </div>
-          ))}
+      <div className="bg-white/50 p-4 lg:p-6 rounded-[2rem] shadow-sm border border-black/5 flex-1 overflow-y-auto max-h-[60vh] no-scrollbar">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {HOUSE_INFO.rules.map((rule, idx) => {
+            const emoji = getRuleEmoji(rule);
+            return (
+              <div 
+                key={idx} 
+                className="bg-white p-3.5 rounded-2xl border-2 border-[#009c3b]/10 hover:border-[#009c3b] transition-all duration-200 flex items-start gap-3 shadow-sm hover:shadow-md group"
+              >
+                <div className="text-xl shrink-0 p-2 bg-[#f1fcf4] rounded-xl border border-[#009c3b]/10 group-hover:bg-[#ffdf00]/20 group-hover:border-yellow-400 transition-all flex items-center justify-center w-11 h-11">
+                  {emoji}
+                </div>
+                <div className="flex-1 min-w-0 mt-0.5">
+                  <p className="text-[#1a1a1a]/80 font-bold text-xs leading-snug group-hover:text-slate-900 transition-colors">
+                    {rule}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
