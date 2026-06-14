@@ -66,7 +66,7 @@ export default function App() {
     { id: 'house', label: 'A Casa', icon: Info },
     { id: 'rules', label: 'Regras', icon: ShieldAlert },
     { id: 'local', label: 'Guia Local', icon: MapPin },
-    { id: 'emergency', label: 'Emergência', icon: Phone },
+    { id: 'emergency', label: 'SOS', icon: Phone },
     { id: 'feedback', label: 'Feedback', icon: MessageSquare },
   ];
 
@@ -77,112 +77,128 @@ export default function App() {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-[#f5f2ed] text-[#1a1a1a] font-sans selection:bg-[#d4a373] selection:text-white pb-12 lg:pb-0 overflow-x-hidden">
-      {/* Mobile Header */}
-      <header className="lg:hidden sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Logo className="w-8 h-8" />
-          <span className="font-serif font-bold text-xl tracking-tight">Casa Coimbra</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => setIsSearchOpen(true)}
-            className="p-2 hover:bg-black/5 rounded-full transition-colors text-[#1a1a1a]/60"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 hover:bg-black/5 rounded-full transition-colors"
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#f1fcf4] text-[#1a1a1a] font-sans selection:bg-[#009c3b] selection:text-[#ffdf00] pb-12 overflow-x-clip">
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        @keyframes wind {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(4px) rotate(3deg); }
+        }
+        .animate-wind {
+          animation: wind 1.5s ease-in-out infinite;
+          transform-origin: top center;
+        }
+        @keyframes bounce-ball {
+          0%, 100% { transform: translateY(0) scaleY(1); }
+          50% { transform: translateY(-12px) scaleY(0.95); }
+        }
+        .animate-bounce-ball {
+          animation: bounce-ball 2s ease-in-out infinite;
+        }
+        @keyframes float-cup {
+          0%, 100% { transform: translateY(0) rotate(-3deg); }
+          50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .animate-float-cup {
+          animation: float-cup 2.5s ease-in-out infinite;
+        }
+        @keyframes toot-vuvuzela {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          50% { transform: rotate(-5deg) scale(1.1); }
+        }
+        .animate-toot {
+          animation: toot-vuvuzela 1.8s ease-in-out infinite;
+        }
+        @keyframes slide-up-fade {
+          0% { transform: translateY(20px) scale(0.8); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+        }
+        .animate-celebrate {
+          animation: slide-up-fade 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+      `}</style>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-black/5 p-6 shadow-sm">
-        <div className="mb-10 flex flex-col items-center text-center">
-          <Logo className="w-16 h-16 mb-4" />
-          <h1 className="font-serif text-2xl font-bold text-[#1a1a1a] mb-1">Casa Coimbra</h1>
-          <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Guia Digital</p>
+      {/* Sticky Top Header with Brand & Compact Navigation Cards */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-yellow-400 py-3 px-4 lg:px-8 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 relative">
+        {/* Dynamic Brazil String Flags (Bandeirolas) */}
+        <div className="absolute top-full left-0 right-0 h-3 flex overflow-hidden pointer-events-none z-10 select-none">
+          {Array.from({ length: 48 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="w-4 h-full shrink-0 animate-wind"
+              style={{
+                clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
+                backgroundColor: i % 3 === 0 ? '#009c3b' : i % 3 === 1 ? '#ffdf00' : '#002776',
+                animationDelay: `${i * 0.05}s`,
+                animationDuration: '1.4s'
+              }}
+            />
+          ))}
         </div>
 
-        <div className="mb-6 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1a1a1a]/40" />
-          <input 
-            type="text"
-            placeholder="Pesquisar..."
-            readOnly
-            onClick={() => setIsSearchOpen(true)}
-            className="w-full bg-[#f5f2ed] border-none rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all cursor-pointer placeholder:text-[#1a1a1a]/30"
-          />
+        <div className="flex items-center justify-between w-full md:w-auto shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Logo className="w-8 h-8 lg:w-9 lg:h-9 relative z-10" />
+              {/* Golden background aura */}
+              <div className="absolute inset-x-[-4px] inset-y-[-4px] bg-yellow-400/20 rounded-full blur-[4px]"></div>
+            </div>
+            <div>
+              <span className="font-serif font-bold text-lg lg:text-xl tracking-tight text-[#1a1a1a] block leading-none">Casa Coimbra</span>
+              <span className="text-[9px] uppercase tracking-wider text-[#009c3b] font-extrabold block mt-0.5 flex items-center gap-1">
+                Guia Digital de Boas-Vindas <span className="text-xs">🇧🇷</span>
+              </span>
+            </div>
+          </div>
+          {/* Mobile Search Icon */}
+          <div className="flex items-center gap-1 md:hidden">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 hover:bg-green-500/10 rounded-full transition-colors text-[#009c3b] active:scale-95"
+              title="Pesquisar no Guia"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto">
+        {/* Compact Horizontal Navigation Cards */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 md:mx-0 md:px-0 w-full md:max-w-4xl">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 shrink-0 border text-[11px] lg:text-xs font-bold uppercase tracking-wider ${
                 activeTab === tab.id 
-                  ? 'bg-[#d4a373] text-white shadow-md shadow-[#d4a373]/20' 
-                  : 'text-[#1a1a1a]/60 hover:bg-black/5 hover:text-[#1a1a1a]'
+                  ? 'bg-[#009c3b] text-[#ffdf00] border-transparent shadow-md shadow-green-700/20 scale-102 font-extrabold ring-1 ring-yellow-400' 
+                  : 'bg-white border-black/5 text-[#1a1a1a]/70 hover:bg-green-500/5 hover:border-green-500/20 hover:text-[#009c3b]'
               }`}
             >
-              <tab.icon className="w-4 h-4" />
-              <span className="font-medium text-sm">{tab.label}</span>
+              <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-[#ffdf00]' : 'text-[#009c3b]'}`} />
+              <span>{tab.label}</span>
             </button>
           ))}
-        </nav>
-
-        <div className="mt-auto pt-6 border-t border-black/5">
-          <a 
-            href={`https://${HOUSE_INFO.website}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-[11px] font-bold text-[#d4a373] hover:underline flex items-center justify-center gap-2 uppercase tracking-wider"
+          
+          {/* Desktop Search Button */}
+          <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="hidden md:flex items-center justify-center p-2.5 bg-yellow-400/10 border border-yellow-400/25 rounded-xl text-[#009c3b] hover:text-[#002776] hover:bg-yellow-400/20 transition-colors shrink-0 active:scale-95"
+            title="Pesquisar no Guia"
           >
-            {HOUSE_INFO.website}
-            <ExternalLink className="w-3 h-3" />
-          </a>
+            <Search className="w-4 h-4" />
+          </button>
         </div>
-      </aside>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="lg:hidden fixed inset-0 z-40 bg-white pt-20 px-6 flex flex-col"
-          >
-            <nav className="space-y-3">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setIsMenuOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
-                    activeTab === tab.id 
-                      ? 'bg-[#d4a373] text-white' 
-                      : 'bg-black/5 text-[#1a1a1a]/60'
-                  }`}
-                >
-                  <tab.icon className="w-6 h-6" />
-                  <span className="font-bold text-lg">{tab.label}</span>
-                </button>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </header>
 
       {/* Main Content */}
-      <main className="lg:ml-64 p-4 lg:p-10 max-w-6xl mx-auto min-h-screen flex flex-col">
+      <main className="p-4 lg:p-10 max-w-6xl mx-auto min-h-screen flex flex-col w-full">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -213,22 +229,22 @@ export default function App() {
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-left">
             <div className="space-y-4">
               <div className="flex flex-col gap-1">
-                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Endereço da Propriedade</p>
+                <p className="text-[10px] uppercase tracking-widest text-[#009c3b] font-bold">Endereço da Propriedade</p>
                 <a 
                   href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] transition-colors flex items-center justify-center md:justify-start gap-2"
+                  className="text-xs text-[#1a1a1a]/60 hover:text-[#009c3b] transition-colors flex items-center justify-center md:justify-start gap-2 animate-wave-flag"
                 >
-                  <MapPin className="w-3 h-3" />
+                  <MapPin className="w-3 h-3 text-[#009c3b]" />
                   Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO
                 </a>
               </div>
               
               <div className="flex flex-col gap-1">
-                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Corretor Responsável</p>
+                <p className="text-[10px] uppercase tracking-widest text-[#009c3b] font-bold">Corretor Responsável</p>
                 <div className="flex items-center justify-center md:justify-start gap-2 text-xs text-[#1a1a1a]/80 font-bold">
-                  <User className="w-3 h-3 text-[#d4a373]" />
+                  <User className="w-3 h-3 text-[#009c3b]" />
                   WELLINGTON RODOVALHO FONSECA
                 </div>
                 <div className="text-[10px] text-[#1a1a1a]/40 space-x-3">
@@ -241,18 +257,18 @@ export default function App() {
 
             <div className="space-y-4">
               <div className="flex flex-col gap-1">
-                <p className="text-[10px] uppercase tracking-widest text-[#d4a373] font-bold">Contato & Links</p>
+                <p className="text-[10px] uppercase tracking-widest text-[#009c3b] font-bold">Contato & Links</p>
                 <div className="flex flex-col gap-2 items-center md:items-start">
-                  <a href="https://www.alugagoias.com.br" target="_blank" rel="noopener noreferrer" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
-                    <Globe className="w-3 h-3" />
+                  <a href="https://www.alugagoias.com.br" target="_blank" rel="noopener noreferrer" className="text-xs text-[#1a1a1a]/60 hover:text-[#009c3b] flex items-center gap-2">
+                    <Globe className="w-3 h-3 text-[#009c3b]" />
                     www.alugagoias.com.br
                   </a>
-                  <a href="https://wa.me/5562991514568" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
-                    <MessageCircle className="w-3 h-3" />
+                  <a href="https://wa.me/5562991514568" className="text-xs text-[#1a1a1a]/60 hover:text-[#009c3b] flex items-center gap-2">
+                    <MessageCircle className="w-3 h-3 text-[#009c3b]" />
                     (62) 99151-4568
                   </a>
-                  <a href="mailto:contato@alugagoias.com.br" className="text-xs text-[#1a1a1a]/60 hover:text-[#d4a373] flex items-center gap-2">
-                    <Mail className="w-3 h-3" />
+                  <a href="mailto:contato@alugagoias.com.br" className="text-xs text-[#1a1a1a]/60 hover:text-[#009c3b] flex items-center gap-2">
+                    <Mail className="w-3 h-3 text-[#009c3b]" />
                     contato@alugagoias.com.br
                   </a>
                 </div>
@@ -260,7 +276,7 @@ export default function App() {
             </div>
           </div>
           <div className="mt-8 pt-4 border-t border-black/5 text-center">
-            <p className="text-[9px] text-[#1a1a1a]/20 uppercase tracking-widest">© {new Date().getFullYear()} Casa Coimbra - Todos os direitos reservados</p>
+            <p className="text-[9px] text-[#1a1a1a]/20 uppercase tracking-widest">© {new Date().getFullYear()} Casa Coimbra - Copa do Mundo 🇧🇷 Todos os direitos reservados</p>
           </div>
         </footer>
       </main>
@@ -274,9 +290,9 @@ export default function App() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setActiveTab('welcome')}
-            className="w-14 h-14 bg-[#d4a373] text-white rounded-full shadow-2xl flex items-center justify-center"
+            className="w-14 h-14 bg-[#009c3b] text-white rounded-full shadow-2xl flex items-center justify-center border-2 border-yellow-400"
           >
-            <Home className="w-6 h-6" />
+            <Home className="w-6 h-6 text-[#ffdf00]" />
           </motion.button>
         )}
         <motion.a
@@ -287,7 +303,7 @@ export default function App() {
           animate={{ scale: 1, opacity: 1 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center"
+          className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center border-2 border-white"
         >
           <MessageCircle className="w-7 h-7" />
         </motion.a>
@@ -301,12 +317,12 @@ export default function App() {
           rel="noopener noreferrer"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-2xl border border-black/5 group"
+          className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-2xl border-2 border-[#009c3b] group"
         >
-          <div className="w-10 h-10 bg-[#25D366] text-white rounded-full flex items-center justify-center">
+          <div className="w-10 h-10 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-md">
             <MessageCircle className="w-6 h-6" />
           </div>
-          <span className="font-bold text-sm text-[#1a1a1a]">Fale com o Anfitrião</span>
+          <span className="font-bold text-sm text-[#104e1c]">Fale com o Anfitrião</span>
         </motion.a>
       </div>
 
@@ -324,64 +340,178 @@ export default function App() {
 }
 
 function WelcomeSection({ onNavigate, tabs, onSearchClick }: { onNavigate: (id: string) => void, tabs: any[], onSearchClick: () => void }) {
+  const [celebrations, setCelebrations] = useState<{ id: number; text: string; left: string }[]>([]);
+  const [celebrationCount, setCelebrationCount] = useState(0);
+
+  const playVuvuzelaSound = () => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const audioCtx = new AudioContextClass();
+      
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      // Bb2 (approx 116.5 Hz) and Bb3 (approx 233 Hz) which are vuvuzela resonant pitches
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(116.54, audioCtx.currentTime);
+      
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(233.08, audioCtx.currentTime);
+      osc2.detune.setValueAtTime(18, audioCtx.currentTime); // buzzy detune
+      
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(850, audioCtx.currentTime);
+      
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      // Volume envelope: clean buzzy toot!
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 0.08);
+      gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime + 0.6);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+      
+      osc1.start();
+      osc2.start();
+      osc1.stop(audioCtx.currentTime + 1.1);
+      osc2.stop(audioCtx.currentTime + 1.1);
+    } catch (e) {
+      console.warn("AudioContext block or not supported", e);
+    }
+  };
+
+  const triggerCelebrate = () => {
+    playVuvuzelaSound();
+    
+    // Add floating GOL elements
+    const phrases = ["GOL!!! ⚽", "RUMO AO HEXA! 🏆", "BRASIL! 🇧🇷", "VUUUUVU! 🎺", "É CAMPEÃO! ⭐", "COPA 2026! ⚽"];
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+    const newId = celebrationCount;
+    setCelebrationCount(c => c + 1);
+
+    const randomLeft = `${15 + Math.random() * 70}%`;
+    setCelebrations(prev => [...prev, { id: newId, text: phrase, left: randomLeft }]);
+
+    // Remove celebration element after animation completes
+    setTimeout(() => {
+      setCelebrations(prev => prev.filter(c => c.id !== newId));
+    }, 1500);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center flex-1 space-y-8 py-4 lg:py-0">
+    <div className="flex flex-col items-center justify-center flex-1 space-y-8 py-6 lg:py-4">
+      {/* Absolute floating celebrations */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-25">
+        <AnimatePresence>
+          {celebrations.map((cb) => (
+            <div
+              key={cb.id}
+              className="absolute text-xl md:text-3xl font-extrabold text-green-600 bg-yellow-300 border-2 border-green-600 px-4 py-2 rounded-full shadow-lg animate-celebrate select-none block"
+              style={{ left: cb.left, top: '40%' }}
+            >
+              {cb.text}
+            </div>
+          ))}
+        </AnimatePresence>
+      </div>
+
       <div className="text-center space-y-2">
-        <Logo className="w-24 h-24 lg:w-32 lg:h-32 mx-auto mb-4" />
-        <h2 className="font-serif text-4xl lg:text-6xl font-bold text-[#1a1a1a]">Casa Coimbra</h2>
-        <p className="text-[#d4a373] font-bold uppercase tracking-[0.2em] text-xs lg:text-sm">Guia Digital de Boas-Vindas</p>
+        <div className="relative inline-block">
+          <Logo className="w-24 h-24 lg:w-28 lg:h-28 mx-auto mb-3" />
+          <span className="absolute bottom-1 right-1 text-3xl animate-bounce-ball inline-block">⚽</span>
+        </div>
+        <h2 className="font-serif text-4xl lg:text-5xl font-extrabold text-[#1a1a1a] tracking-tight">Casa Coimbra</h2>
+        <div className="inline-flex items-center gap-2 bg-[#009c3b] px-4 py-1.5 rounded-full text-[#ffdf00] font-black text-xs uppercase tracking-widest shadow-md">
+          <span>Seja Bem-Vindo!</span>
+          <span className="text-sm">🇧🇷</span>
+          <span>Rumo ao Hexa!</span>
+        </div>
+        
         <a 
           href="https://www.google.com/maps/search/?api=1&query=Rua+Santa+Gertrudes+26+Setor+Coimbra+Goiania+GO"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 text-[10px] lg:text-xs text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors mt-2"
+          className="flex items-center justify-center gap-2 text-[10px] lg:text-xs text-[#009c3b] hover:text-[#002776] font-bold transition-colors mt-3"
         >
-          <MapPin className="w-3 h-3" />
-          <span>Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO</span>
+          <MapPin className="w-3.5 h-3.5 animate-bounce-ball text-[#009c3b]" />
+          <span className="underline decoration-dotted">Rua Santa Gertrudes (antiga 252), nº 26, Setor Coimbra, Goiânia/GO</span>
         </a>
       </div>
 
-      {/* Prominent Body Search Box */}
+      {/* Prominent Body Search Box - Copa Styled */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1 }}
         className="w-full max-w-xl px-4"
       >
         <div 
           onClick={onSearchClick}
-          className="bg-white border border-black/5 p-4 lg:p-5 rounded-[2rem] shadow-xl shadow-[#d4a373]/5 flex items-center gap-4 cursor-pointer group hover:border-[#d4a373]/30 transition-all"
+          className="bg-white border-2 border-[#009c3b]/30 p-4 lg:p-5 rounded-[2rem] shadow-xl shadow-green-900/5 flex items-center gap-4 cursor-pointer group hover:border-[#009c3b] hover:shadow-green-900/10 transition-all ring-1 ring-transparent hover:ring-yellow-400"
         >
-          <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#f5f2ed] rounded-2xl flex items-center justify-center text-[#d4a373] group-hover:bg-[#d4a373] group-hover:text-white transition-colors">
+          <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#ffdf00]/20 rounded-2xl flex items-center justify-center text-[#009c3b] group-hover:bg-[#009c3b] group-hover:text-[#ffdf00] transition-all duration-300">
             <Search className="w-5 h-5 lg:w-6 lg:h-6" />
           </div>
           <div className="flex-1 text-left">
-            <p className="text-sm lg:text-base font-bold text-[#1a1a1a] mb-0.5">O que você procura?</p>
-            <p className="text-[10px] lg:text-xs text-[#1a1a1a]/40 font-medium">Ex: wi-fi, regras, check-in, farmácia...</p>
+            <p className="text-sm lg:text-base font-black text-[#1a1a1a] mb-0.5">O que você procura?</p>
+            <p className="text-[10px] lg:text-xs text-[#1a1a1a]/40 font-bold">Ex: wi-fi, regras, check-in, farmácia...</p>
           </div>
         </div>
       </motion.div>
 
-      {/* Compact App-like Button Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 lg:gap-4 w-full max-w-2xl">
-        {tabs.filter(t => t.id !== 'welcome').map((tab) => (
-          <motion.button
-            key={tab.id}
-            whileHover={{ y: -3, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => onNavigate(tab.id)}
-            className="bg-white p-4 lg:p-6 rounded-3xl shadow-sm border border-black/5 flex flex-col items-center text-center gap-3 transition-all hover:shadow-lg hover:shadow-[#d4a373]/10 group"
-          >
-            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-[#f5f2ed] rounded-2xl flex items-center justify-center group-hover:bg-[#d4a373] transition-colors">
-              <tab.icon className="w-5 h-5 lg:w-6 lg:h-6 text-[#d4a373] group-hover:text-white transition-colors" />
-            </div>
-            <span className="font-bold text-[#1a1a1a] text-xs lg:text-sm tracking-tight">{tab.label}</span>
-          </motion.button>
-        ))}
-      </div>
+      {/* Soccer/Copa interactive widgets box */}
+      <div className="bg-gradient-to-br from-[#009c3b]/10 to-[#ffdf00]/15 w-full max-w-xl p-6 rounded-[2.5rem] border-2 border-[#009c3b]/10 flex flex-col items-center justify-center space-y-4 shadow-sm text-center relative overflow-hidden">
+        {/* Background visual watermarks */}
+        <div className="absolute top-[-10px] left-[-10px] text-5xl opacity-10 select-none">🏆</div>
+        <div className="absolute bottom-[-10px] right-[-10px] text-5xl opacity-10 select-none">⚽</div>
 
-      <div className="pt-4 text-center">
-        <p className="text-[#1a1a1a]/40 text-[10px] uppercase tracking-widest font-bold">Toque em uma opção para começar</p>
+        <h3 className="font-serif text-lg font-black text-[#104e1c] flex items-center gap-2">
+          <span>Estação da Torcida</span>
+          <span>📣</span>
+        </h3>
+        
+        <p className="text-xs text-slate-700 max-w-[280px] leading-relaxed font-semibold">
+          Sinta a vibração da Copa na Casa Coimbra! Navegue pelas abas no topo ou clique para soprar a vuvuzela!
+        </p>
+
+        <div className="flex items-center justify-center gap-6 pt-2">
+          {/* Animated bouncing Soccer ball */}
+          <div className="flex flex-col items-center space-y-1">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-2xl animate-bounce-ball select-none cursor-grab active:cursor-grabbing border-2 border-[#009c3b]" title="Bola Oficial">
+              ⚽
+            </div>
+            <span className="text-[9px] uppercase tracking-wider font-extrabold text-[#009c3b]">Bola</span>
+          </div>
+
+          {/* Golden Cup / Trophy */}
+          <div className="flex flex-col items-center space-y-1">
+            <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center shadow-md text-2xl animate-float-cup select-none border-2 border-[#ffdf00]" title="Taça da Copa">
+              🏆
+            </div>
+            <span className="text-[9px] uppercase tracking-wider font-extrabold text-[#002776]">Taça</span>
+          </div>
+
+          {/* Clickable Vuvuzela */}
+          <div className="flex flex-col items-center space-y-1">
+            <button 
+              onClick={triggerCelebrate}
+              className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg text-2xl animate-toot active:scale-90 transition-all border-2 border-yellow-400 hover:bg-blue-700" 
+              title="Sopre a Vuvuzela!"
+            >
+              🎺
+            </button>
+            <span className="text-[9px] uppercase tracking-wider font-extrabold text-blue-800 animate-pulse">Soprar!</span>
+          </div>
+        </div>
+
+        <div className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest pt-1">
+          Clique nos botões do topo para ver o guia completo!
+        </div>
       </div>
     </div>
   );
@@ -391,49 +521,52 @@ function CheckInSection() {
   return (
     <div className="space-y-8 flex flex-col flex-1">
       <div className="space-y-2">
-        <h2 className="font-serif text-3xl font-bold">Check-in & Acesso</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua entrada.</p>
+        <h2 className="font-serif text-3xl font-black text-[#009c3b] flex items-center gap-2">
+          <span>Check-in & Acesso</span>
+          <span>🗝️</span>
+        </h2>
+        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua entrada garantida.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-black/5 space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#d4a373]/10 rounded-xl flex items-center justify-center">
-                <Key className="text-[#d4a373] w-5 h-5" />
+              <div className="w-10 h-10 bg-[#009c3b]/10 rounded-xl flex items-center justify-center">
+                <Key className="text-[#009c3b] w-5 h-5" />
               </div>
               <h3 className="font-serif text-xl font-bold">Entrada</h3>
             </div>
-            <div className="bg-[#d4a373] px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider">
+            <div className="bg-[#009c3b] px-3 py-1 rounded-full text-[#ffdf00] text-[10px] font-black uppercase tracking-wider">
               {HOUSE_INFO.checkIn.time}
             </div>
           </div>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-bold text-[#d4a373] text-xs uppercase tracking-wider">Portão</h4>
-              <p className="text-[#1a1a1a]/70 leading-relaxed text-xs bg-[#f5f2ed] p-4 rounded-xl">
+              <h4 className="font-bold text-[#009c3b] text-xs uppercase tracking-wider">Portão</h4>
+              <p className="text-[#1a1a1a]/70 leading-relaxed text-xs bg-[#f1fcf4] p-4 rounded-xl border-l-4 border-[#009c3b]">
                 {HOUSE_INFO.checkIn.gate}
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="font-bold text-[#d4a373] text-xs uppercase tracking-wider">Chaves</h4>
-              <p className="text-[#1a1a1a]/70 leading-relaxed text-xs bg-[#f5f2ed] p-4 rounded-xl">
+              <h4 className="font-bold text-[#009c3b] text-xs uppercase tracking-wider">Chaves</h4>
+              <p className="text-[#1a1a1a]/70 leading-relaxed text-xs bg-[#f1fcf4] p-4 rounded-xl border-l-4 border-[#ffdf00]">
                 {HOUSE_INFO.checkIn.keys}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] p-8 rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center items-center text-center space-y-4">
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center">
-            <Clock className="w-8 h-8 text-[#d4a373]" />
+        <div className="bg-[#002776] p-8 rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center items-center text-center space-y-4 border-2 border-yellow-400">
+          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center animate-bounce-ball">
+            <Clock className="w-8 h-8 text-[#ffdf00]" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-serif text-2xl font-bold">Horário</h3>
-            <p className="text-[#d4a373] font-bold text-lg">{HOUSE_INFO.checkIn.time}</p>
+            <h3 className="font-serif text-2xl font-bold">Horário de Check-in</h3>
+            <p className="text-[#ffdf00] font-black text-2xl">{HOUSE_INFO.checkIn.time}</p>
           </div>
-          <p className="text-white/40 text-xs max-w-[200px]">Seja bem-vindo à Casa Coimbra! Aproveite sua estadia.</p>
+          <p className="text-white/70 text-xs max-w-[200px]">Seja bem-vindo à Casa Coimbra! Aproveite a Copa do Mundo com muito conforto.</p>
         </div>
       </div>
     </div>
@@ -444,20 +577,23 @@ function CheckOutSection() {
   return (
     <div className="space-y-8 flex flex-col flex-1">
       <div className="space-y-2">
-        <h2 className="font-serif text-3xl font-bold">Checkout</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua saída.</p>
+        <h2 className="font-serif text-3xl font-black text-[#009c3b] flex items-center gap-2">
+          <span>Checkout</span>
+          <span>👋</span>
+        </h2>
+        <p className="text-[#1a1a1a]/60 text-sm">Instruções para sua saída tranquila.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
-        <div className="bg-[#1a1a1a] p-8 rounded-[2.5rem] shadow-xl text-white space-y-6">
+        <div className="bg-[#002776] p-8 rounded-[2.5rem] shadow-xl text-white space-y-6 border-2 border-yellow-400">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                <LogOut className="text-white w-5 h-5" />
+                <LogOut className="text-[#ffdf00] w-5 h-5" />
               </div>
               <h3 className="font-serif text-xl font-bold">Saída</h3>
             </div>
-            <div className="bg-[#d4a373] px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-wider">
+            <div className="bg-yellow-400 px-3 py-1 rounded-full text-[#002776] text-[10px] font-black uppercase tracking-wider">
               {HOUSE_INFO.checkOut.time}
             </div>
           </div>
@@ -465,22 +601,22 @@ function CheckOutSection() {
           <div className="space-y-3">
             {HOUSE_INFO.checkOut.rules.map((rule, idx) => (
               <div key={idx} className="flex items-start gap-3">
-                <CheckCircle2 className="w-4 h-4 text-[#d4a373] shrink-0 mt-0.5" />
-                <span className="text-[11px] text-white/80 leading-snug">{rule}</span>
+                <CheckCircle2 className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                <span className="text-[11px] text-white/90 leading-snug font-bold">{rule}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-black/5 flex flex-col justify-center items-center text-center space-y-4">
-          <div className="w-16 h-16 bg-[#f5f2ed] rounded-2xl flex items-center justify-center">
-            <Clock className="w-8 h-8 text-[#d4a373]" />
+          <div className="w-16 h-16 bg-[#f1fcf4] rounded-2xl flex items-center justify-center animate-bounce-ball">
+            <Clock className="w-8 h-8 text-[#009c3b]" />
           </div>
           <div className="space-y-1">
             <h3 className="font-serif text-2xl font-bold">Horário Limite</h3>
-            <p className="text-[#d4a373] font-bold text-lg">{HOUSE_INFO.checkOut.time}</p>
+            <p className="text-[#009c3b] font-black text-2xl">{HOUSE_INFO.checkOut.time}</p>
           </div>
-          <p className="text-[#1a1a1a]/40 text-xs max-w-[200px]">Agradecemos a preferência e esperamos vê-lo novamente!</p>
+          <p className="text-[#1a1a1a]/40 text-xs max-w-[200px]">Agradecemos sua preferência na estadia e desejamos um ótimo retorno!</p>
         </div>
       </div>
     </div>
@@ -526,12 +662,12 @@ function HouseSection() {
     <div className="space-y-6 flex flex-col flex-1">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="font-serif text-3xl font-bold">A Casa</h2>
+          <h2 className="font-serif text-3xl font-black text-[#009c3b]">A Casa</h2>
           <p className="text-[#1a1a1a]/60 text-sm">Estrutura completa para sua estadia.</p>
         </div>
-        <div className="bg-[#d4a373] px-4 py-2 rounded-2xl text-white flex items-center gap-2 shadow-sm">
+        <div className="bg-[#009c3b] px-4 py-2 rounded-2xl text-[#ffdf00] flex items-center gap-2 shadow-sm font-black text-xs ring-1 ring-yellow-400 animate-pulse">
           <Zap className="w-4 h-4" />
-          <span className="font-bold text-xs uppercase tracking-wider">Tensão 220V</span>
+          <span className="uppercase tracking-wider">Tensão 220V</span>
         </div>
       </div>
 
@@ -539,11 +675,11 @@ function HouseSection() {
         {rooms.map((room, idx) => (
           <div 
             key={idx}
-            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col gap-3"
+            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col gap-3 hover:border-[#009c3b] transition-all"
           >
             <div className="flex items-center justify-between">
-              <div className="w-10 h-10 bg-[#f5f2ed] rounded-xl flex items-center justify-center">
-                <room.icon className="text-[#d4a373] w-5 h-5" />
+              <div className="w-10 h-10 bg-[#f1fcf4] rounded-xl flex items-center justify-center">
+                <room.icon className="text-[#009c3b] w-5 h-5 animate-wave-flag" />
               </div>
               {room.isWifi && (
                 <button 
@@ -551,15 +687,15 @@ function HouseSection() {
                     navigator.clipboard.writeText(HOUSE_INFO.wifi.password);
                     alert('Senha copiada!');
                   }}
-                  className="px-3 py-1 bg-[#f5f2ed] rounded-lg text-[9px] font-bold uppercase text-[#d4a373] hover:bg-[#d4a373] hover:text-white transition-all shadow-sm"
+                  className="px-3 py-1 bg-yellow-400 text-[#002776] rounded-lg text-[9px] font-black uppercase hover:bg-[#009c3b] hover:text-white transition-all shadow-sm"
                 >
                   Copiar Senha
                 </button>
               )}
             </div>
             <div>
-              <h3 className="font-serif text-sm font-bold mb-1">{room.title}</h3>
-              <p className="text-[#1a1a1a]/60 text-[10px] leading-relaxed">{room.desc}</p>
+              <h3 className="font-serif text-sm font-bold mb-1 text-slate-900">{room.title}</h3>
+              <p className="text-[#1a1a1a]/70 text-[10px] leading-relaxed font-semibold">{room.desc}</p>
             </div>
           </div>
         ))}
@@ -571,20 +707,20 @@ function HouseSection() {
 function RulesSection() {
   return (
     <div className="space-y-6 flex flex-col flex-1">
-      <div className="bg-[#d4a373] p-6 rounded-[2rem] text-white flex items-center gap-4">
-        <AlertTriangle className="w-8 h-8 shrink-0" />
+      <div className="bg-[#009c3b] p-6 rounded-[2rem] text-[#ffdf00] flex items-center gap-4 border-2 border-yellow-400">
+        <AlertTriangle className="w-8 h-8 shrink-0 text-[#ffdf00]" />
         <div>
-          <h2 className="font-serif text-2xl font-bold">Regras</h2>
-          <p className="text-white/80 text-xs">Diretrizes para uma boa convivência.</p>
+          <h2 className="font-serif text-2xl font-black">Regras da Casa</h2>
+          <p className="text-white/90 text-xs font-semibold">Diretrizes importantes para uma boa convivência.</p>
         </div>
       </div>
 
       <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-black/5 flex-1 overflow-y-auto max-h-[60vh]">
         <div className="grid grid-cols-1 gap-3">
           {HOUSE_INFO.rules.map((rule, idx) => (
-            <div key={idx} className="flex items-start gap-3 p-2 hover:bg-[#f5f2ed] rounded-xl transition-colors">
-              <div className="w-1.5 h-1.5 bg-[#d4a373] rounded-full mt-1.5 shrink-0"></div>
-              <span className="text-[#1a1a1a]/70 font-medium text-[11px] leading-snug">{rule}</span>
+            <div key={idx} className="flex items-start gap-3 p-2 hover:bg-[#f1fcf4] rounded-xl transition-colors">
+              <div className="w-1.5 h-1.5 bg-[#009c3b] rounded-full mt-1.5 shrink-0"></div>
+              <span className="text-[#1a1a1a]/80 font-bold text-[11px] leading-snug">{rule}</span>
             </div>
           ))}
         </div>
@@ -608,8 +744,8 @@ function LocalGuideSection() {
   return (
     <div className="space-y-6 flex flex-col flex-1">
       <div className="space-y-1">
-        <h2 className="font-serif text-3xl font-bold">Guia Local</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">O melhor do Setor Coimbra.</p>
+        <h2 className="font-serif text-3xl font-black text-[#009c3b]">Guia Local</h2>
+        <p className="text-[#1a1a1a]/60 text-sm">O melhor do Setor Coimbra na torcida!</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -617,13 +753,13 @@ function LocalGuideSection() {
           <button
             key={cat.id}
             onClick={() => setActiveCat(cat.id)}
-            className={`flex-1 min-w-[100px] flex items-center justify-center gap-2 py-2 rounded-full text-[10px] font-bold transition-all ${
+            className={`flex-1 min-w-[100px] flex items-center justify-center gap-2 py-2 rounded-full text-[10px] font-black transition-all ${
               activeCat === cat.id 
-                ? 'bg-[#d4a373] text-white shadow-md' 
-                : 'bg-white text-[#1a1a1a]/60 border border-black/5'
+                ? 'bg-[#009c3b] text-[#ffdf00] shadow-md ring-1 ring-yellow-400' 
+                : 'bg-white text-[#1a1a1a]/60 border border-black/5 hover:bg-green-500/5'
             }`}
           >
-            <cat.icon className="w-3 h-3" />
+            <cat.icon className="w-3 h-3 text-[#009c3b]" />
             {cat.label}
           </button>
         ))}
@@ -633,28 +769,28 @@ function LocalGuideSection() {
         {LOCAL_GUIDE[activeCat].map((place, idx) => (
           <div
             key={idx}
-            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col"
+            className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 flex flex-col hover:border-[#009c3b] transition-all"
           >
-            <h3 className="font-serif text-sm font-bold mb-1 text-[#d4a373]">{place.name}</h3>
-            <p className="text-[10px] text-[#1a1a1a]/60 leading-relaxed mb-3 flex-1">{place.description}</p>
+            <h3 className="font-serif text-sm font-black mb-1 text-[#009c3b]">{place.name}</h3>
+            <p className="text-[10px] text-[#1a1a1a]/70 font-semibold leading-relaxed mb-3 flex-1">{place.description}</p>
             <div className="space-y-2 pt-3 border-t border-black/5">
               {place.address && (
                 <a 
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name} ${place.address}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-[9px] text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors"
+                  className="flex items-start gap-2 text-[9px] text-[#1a1a1a]/50 hover:text-[#009c3b] transition-colors"
                 >
-                  <MapPin className="w-3 h-3 shrink-0" />
+                  <MapPin className="w-3 h-3 shrink-0 text-[#009c3b]" />
                   <span>{place.address}</span>
                 </a>
               )}
               {place.phone && (
                 <a 
                   href={`tel:${place.phone.replace(/\D/g, '')}`}
-                  className="flex items-start gap-2 text-[9px] text-[#1a1a1a]/40 hover:text-[#d4a373] transition-colors"
+                  className="flex items-start gap-2 text-[9px] text-[#1a1a1a]/50 hover:text-[#009c3b] transition-colors"
                 >
-                  <Phone className="w-3 h-3 shrink-0" />
+                  <Phone className="w-3 h-3 shrink-0 text-[#009c3b]" />
                   <span>{place.phone}</span>
                 </a>
               )}
@@ -670,8 +806,11 @@ function EmergencySection() {
   return (
     <div className="space-y-6 flex flex-col flex-1">
       <div className="space-y-1">
-        <h2 className="font-serif text-3xl font-bold">Emergência</h2>
-        <p className="text-[#1a1a1a]/60 text-sm">Contatos úteis.</p>
+        <h2 className="font-serif text-3xl font-black text-[#009c3b] flex items-center gap-2">
+          <span>SOS</span>
+          <span className="text-red-500 animate-pulse">🚨</span>
+        </h2>
+        <p className="text-[#1a1a1a]/60 text-sm">Contatos de urgência úteis para qualquer momento.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto max-h-[50vh] pr-1">
@@ -679,14 +818,14 @@ function EmergencySection() {
           <a
             key={idx}
             href={`tel:${contact.phone.replace(/\D/g, '')}`}
-            className="bg-white p-4 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4 group hover:border-[#d4a373] transition-colors"
+            className="bg-white p-4 rounded-2xl shadow-sm border border-black/5 flex items-center gap-4 group hover:border-[#009c3b] transition-colors"
           >
-            <div className="w-10 h-10 bg-[#f5f2ed] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#d4a373] group-hover:text-white transition-all">
-              <Phone className="w-4 h-4" />
+            <div className="w-10 h-10 bg-[#f1fcf4] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#009c3b] group-hover:text-white transition-all">
+              <Phone className="w-4 h-4 text-[#009c3b]" />
             </div>
             <div className="text-left">
               <p className="text-[9px] uppercase tracking-widest text-[#1a1a1a]/40 font-bold leading-tight">{contact.name}</p>
-              <p className="text-sm font-serif font-bold group-hover:text-[#d4a373] transition-colors">{contact.phone}</p>
+              <p className="text-sm font-serif font-black text-slate-800 group-hover:text-[#009c3b] transition-colors">{contact.phone}</p>
             </div>
           </a>
         ))}
@@ -738,7 +877,7 @@ function FeedbackSection() {
   return (
     <div className="space-y-6 flex flex-col flex-1 max-w-2xl mx-auto w-full">
       <div className="space-y-1">
-        <h2 className="font-serif text-3xl font-bold">Feedback & Contato</h2>
+        <h2 className="font-serif text-3xl font-black text-[#009c3b]">Feedback & Contato</h2>
         <p className="text-[#1a1a1a]/60 text-sm">Elogios, dúvidas ou sugestões? Adoraríamos ouvir você.</p>
       </div>
 
@@ -755,7 +894,7 @@ function FeedbackSection() {
           <p className="text-[#1a1a1a]/60">Sua mensagem foi enviada com sucesso e será analisada pelo anfitrião.</p>
           <button 
             onClick={() => setStatus('idle')}
-            className="px-6 py-2 bg-[#d4a373] text-white rounded-full font-bold text-sm"
+            className="px-6 py-2 bg-[#009c3b] text-[#ffdf00] rounded-full font-black text-sm ring-1 ring-yellow-400"
           >
             Enviar outra mensagem
           </button>
@@ -768,7 +907,7 @@ function FeedbackSection() {
               <select 
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all"
+                className="w-full bg-[#f1fcf4] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#009c3b] transition-all font-bold text-slate-800"
                 required
               >
                 <option>Elogio</option>
@@ -786,7 +925,7 @@ function FeedbackSection() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Como podemos te chamar?"
-                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all"
+                className="w-full bg-[#f1fcf4] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#009c3b] transition-all font-bold text-slate-800"
               />
             </div>
 
@@ -797,7 +936,7 @@ function FeedbackSection() {
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Escreva aqui..."
                 rows={4}
-                className="w-full bg-[#f5f2ed] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#d4a373] transition-all resize-none"
+                className="w-full bg-[#f1fcf4] border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#009c3b] transition-all resize-none font-bold text-slate-800"
                 required
               />
             </div>
@@ -814,10 +953,10 @@ function FeedbackSection() {
                 />
                 <label 
                   htmlFor="image-upload"
-                  className="flex items-center gap-3 w-full bg-[#f5f2ed] border-dashed border-2 border-black/5 rounded-2xl px-4 py-3 text-sm cursor-pointer hover:bg-black/5 transition-all"
+                  className="flex items-center gap-3 w-full bg-[#f1fcf4] border-dashed border-2 border-green-200 rounded-2xl px-4 py-3 text-sm cursor-pointer hover:bg-green-500/5 transition-all"
                 >
-                  <Camera className="w-5 h-5 text-[#d4a373]" />
-                  <span className="text-[#1a1a1a]/60 truncate">
+                  <Camera className="w-5 h-5 text-[#009c3b]" />
+                  <span className="text-[#1a1a1a]/60 truncate font-semibold">
                     {image ? image.name : "Toque para selecionar uma foto"}
                   </span>
                 </label>
@@ -832,15 +971,15 @@ function FeedbackSection() {
           <button 
             type="submit"
             disabled={status === 'loading'}
-            className="w-full bg-[#d4a373] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#d4a373]/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+            className="w-full bg-[#009c3b] text-[#ffdf00] py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-lg shadow-green-700/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 border-2 border-yellow-400"
           >
             {status === 'loading' ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
                 <div className="flex items-center gap-2">
-                  <Send className="w-5 h-5" />
-                  <span>Enviar Mensagem</span>
+                  <Send className="w-5 h-5 text-[#ffdf00]" />
+                  <span>Enviar Mensagem 🇧🇷</span>
                 </div>
               </>
             )}
@@ -920,36 +1059,36 @@ function SearchOverlay({ isOpen, onClose, onNavigate }: { isOpen: boolean, onClo
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
-            className="bg-[#f5f2ed] w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[70vh] lg:h-auto max-h-[80vh]"
+            className="bg-[#f1fcf4] w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[70vh] lg:h-auto max-h-[80vh] border-2 border-[#009c3b]"
             onClick={e => e.stopPropagation()}
           >
             <div className="p-4 border-b border-black/5 bg-white flex items-center gap-3">
-              <Search className="w-5 h-5 text-[#d4a373]" />
+              <Search className="w-5 h-5 text-[#009c3b]" />
               <input 
                 autoFocus
                 type="text"
                 placeholder="O que você precisa saber?"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="flex-1 bg-transparent border-none focus:ring-0 text-lg lg:text-xl font-medium placeholder:text-[#1a1a1a]/20"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-lg lg:text-xl font-bold placeholder:text-[#1a1a1a]/20 text-slate-900"
               />
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-black/5 rounded-full transition-colors"
+                className="p-2 hover:bg-green-500/10 rounded-full transition-colors text-[#009c3b]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
               {query.trim() === '' ? (
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-3 p-10">
-                  <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center text-[#d4a373]">
-                    <Search className="w-8 h-8 opacity-20" />
+                  <div className="w-16 h-16 bg-white/55 rounded-full flex items-center justify-center text-[#009c3b]">
+                    <Search className="w-8 h-8 opacity-40 animate-pulse" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#1a1a1a]/40">Pesquisa Inteligente</h3>
-                    <p className="text-xs text-[#1a1a1a]/30">Ex: "wifi", "telefone", "churrasqueira", "hospital"</p>
+                    <h3 className="font-extrabold text-[#009c3b] text-base">Pesquisa Inteligente da Torcida 🇧🇷</h3>
+                    <p className="text-xs text-[#1a1a1a]/40 font-bold mt-1">Ex: "wifi", "telefone", "churrasqueira", "hospital"</p>
                   </div>
                 </div>
               ) : filteredResults.length > 0 ? (
@@ -957,31 +1096,31 @@ function SearchOverlay({ isOpen, onClose, onNavigate }: { isOpen: boolean, onClo
                   <button
                     key={idx}
                     onClick={() => onNavigate(result.tabId)}
-                    className="w-full bg-white p-4 rounded-2xl border border-black/5 hover:border-[#d4a373] hover:shadow-md transition-all text-left flex items-start justify-between group"
+                    className="w-full bg-white p-4 rounded-2xl border border-black/5 hover:border-[#009c3b] hover:shadow-md transition-all text-left flex items-start justify-between group"
                   >
                     <div className="space-y-1 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#d4a373] bg-[#d4a373]/5 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#009c3b] bg-[#009c3b]/10 px-2 py-0.5 rounded-full">
                           {result.tabId}
                         </span>
                         <h4 className="font-bold text-sm lg:text-base text-[#1a1a1a]">{result.title}</h4>
                       </div>
-                      <p className="text-xs text-[#1a1a1a]/60 line-clamp-2 leading-relaxed">{result.content}</p>
+                      <p className="text-xs text-[#1a1a1a]/60 line-clamp-2 leading-relaxed font-semibold">{result.content}</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-[#d4a373] opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
+                    <ChevronRight className="w-5 h-5 text-[#009c3b] opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
                   </button>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
+                <div className="flex flex-col items-center justify-center py-20 text-center opacity-70">
                   <Logo className="w-16 h-16 grayscale mb-4" />
-                  <p className="font-bold">Nenhum resultado encontrado para "{query}"</p>
-                  <p className="text-xs">Tente termos mais simples.</p>
+                  <p className="font-extrabold text-slate-700">Nenhum resultado encontrado para "{query}"</p>
+                  <p className="text-xs text-slate-500 font-semibold mt-1">Tente termos mais simples.</p>
                 </div>
               )}
             </div>
             
             <div className="p-4 bg-white/50 border-t border-black/5 text-center">
-              <p className="text-[10px] text-[#1a1a1a]/30 uppercase tracking-widest font-bold">Pesquisando no Guia Casa Coimbra</p>
+              <p className="text-[10px] text-[#009c3b] uppercase tracking-widest font-black">Pesquisando no Guia Casa Coimbra Rumo ao Hexa! 🏆</p>
             </div>
           </motion.div>
         </motion.div>
